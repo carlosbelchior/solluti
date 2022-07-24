@@ -11,4 +11,9 @@ class Loja extends Model
     protected $table = 'lojas';
     protected $fillable = ['nome', 'email'];
     protected $hidden = ['created_at', 'updated_at'];
+
+    public function produtos()
+    {
+        return $this->hasMany(Produto::class, 'id', 'loja_id');
+    }
 }

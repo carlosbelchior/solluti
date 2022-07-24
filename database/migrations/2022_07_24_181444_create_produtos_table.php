@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nome', 60);
             $table->double('valor', 10, 2);
-            $table->foreignId('loja_id')->constrained('lojas');
+            $table->foreignId('loja_id')->constrained('lojas')->onDelete('cascade');
             $table->boolean('ativo');
             $table->timestamps();
         });
