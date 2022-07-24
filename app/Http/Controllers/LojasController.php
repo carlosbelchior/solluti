@@ -41,7 +41,15 @@ class LojasController extends Controller
      */
     public function show($id)
     {
-        return Loja::with(['produtos'])->find($id);
+        $loja = Loja::with(['produtos'])->find($id);
+        if($loja)
+            return $loja;
+
+        return response()->json([
+            'message' => 'Loja não encontrada',
+            'status' => 'error',
+            'type' => 'crud'
+        ], 400);
     }
 
     /**
