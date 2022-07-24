@@ -10,77 +10,84 @@ class LojasController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Loja::all();
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreLojaRequest  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(StoreLojaRequest $request)
     {
-        //
+        $dadosLoja = $request->validated();
+        if(Loja::create($dadosLoja))
+            return response()->json([
+                'message' => 'Loja cadastrada com sucesso',
+                'status' => 'success',
+                'type' => 'crud'
+            ], 200);
+
+        return response()->json([
+            'message' => 'Erro ao cadastrar a loja, verifique sua conexão e tente novamente',
+            'status' => 'error',
+            'type' => 'crud'
+        ], 400);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\Loja  $loja
-     * @return \Illuminate\Http\Response
      */
-    public function show(Loja $loja)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Loja  $loja
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Loja $loja)
-    {
-        //
+        return Loja::with(['produtos'])->find($id);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateLojaRequest  $request
-     * @param  \App\Models\Loja  $loja
-     * @return \Illuminate\Http\Response
      */
-    public function update(UpdateLojaRequest $request, Loja $loja)
+    public function update(UpdateLojaRequest $request, $id)
     {
-        //
+        $loja = Loja::find($id);
+        if(!$loja)
+            return response()->json([
+                'message' => 'Loja não encontrada',
+                'status' => 'error',
+                'type' => 'crud'
+            ], 400);
+
+        $dadosLoja = $request->validated();
+        if($loja->update($dadosLoja))
+            return response()->json([
+                'message' => 'Loja atualizada com sucesso',
+                'status' => 'success',
+                'type' => 'crud'
+            ], 200);
+
+        return response()->json([
+            'message' => 'Erro ao atualizar a loja, verifique sua conexão e tente novamente',
+            'status' => 'error',
+            'type' => 'crud'
+        ], 400);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Loja  $loja
-     * @return \Illuminate\Http\Response
      */
-    public function destroy(Loja $loja)
+    public function destroy($id)
     {
-        //
+        if(Loja::find($id)->delete())
+            return response()->json([
+                'message' => 'Loja deletada com sucesso',
+                'status' => 'success',
+                'type' => 'crud'
+            ], 200);
+
+        return response()->json([
+            'message' => 'Erro ao deletar a loja',
+            'status' => 'error',
+            'type' => 'crud'
+        ], 400);
     }
 }

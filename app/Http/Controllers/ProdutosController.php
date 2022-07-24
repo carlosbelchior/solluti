@@ -10,77 +10,84 @@ class ProdutosController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Produto::all();
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreProdutoRequest  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(StoreProdutoRequest $request)
     {
-        //
+        $dadosProduto = $request->validated();
+        if(Produto::create($dadosProduto))
+            return response()->json([
+                'message' => 'Produto cadastrada com sucesso',
+                'status' => 'success',
+                'type' => 'crud'
+            ], 200);
+
+        return response()->json([
+            'message' => 'Erro ao cadastrar o produto, verifique sua conexão e tente novamente',
+            'status' => 'error',
+            'type' => 'crud'
+        ], 400);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\Produto  $produto
-     * @return \Illuminate\Http\Response
      */
-    public function show(Produto $produto)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Produto  $produto
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Produto $produto)
-    {
-        //
+        return Produto::find($id);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateProdutoRequest  $request
-     * @param  \App\Models\Produto  $produto
-     * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProdutoRequest $request, Produto $produto)
+    public function update(UpdateProdutoRequest $request, $id)
     {
-        //
+        $produto = Produto::find($id);
+        if(!$produto)
+            return response()->json([
+                'message' => 'Produto não encontrado',
+                'status' => 'error',
+                'type' => 'crud'
+            ], 400);
+
+        $dadosProduto = $request->validated();
+        if($produto->update($dadosProduto))
+            return response()->json([
+                'message' => 'Produto atualizado com sucesso',
+                'status' => 'success',
+                'type' => 'crud'
+            ], 200);
+
+        return response()->json([
+            'message' => 'Erro ao atualizar o produto, verifique sua conexão e tente novamente',
+            'status' => 'error',
+            'type' => 'crud'
+        ], 400);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Produto  $produto
-     * @return \Illuminate\Http\Response
      */
-    public function destroy(Produto $produto)
+    public function destroy($id)
     {
-        //
+        if(Produto::find($id)->delete())
+            return response()->json([
+                'message' => 'Produto deletado com sucesso',
+                'status' => 'success',
+                'type' => 'crud'
+            ], 200);
+
+        return response()->json([
+            'message' => 'Erro ao deletar o produto',
+            'status' => 'error',
+            'type' => 'crud'
+        ], 400);
     }
 }
