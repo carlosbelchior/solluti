@@ -27,7 +27,7 @@ class UpdateProdutoRequest extends FormRequest
     {
         return [
             'nome' => 'required|min:3|max:40',
-            'valor' => 'required|integer|min:2|max:6',
+            'valor' => 'required|numeric|min:0.01|max:9999.99',
             'loja_id' => 'required|exists:lojas,id',
             'ativo' => 'required|boolean'
         ];

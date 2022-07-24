@@ -41,7 +41,15 @@ class ProdutosController extends Controller
      */
     public function show($id)
     {
-        return Produto::find($id);
+        $produto = Produto::find($id);
+        if($produto)
+            return $produto;
+
+        return response()->json([
+            'message' => 'Produto não encontrado',
+            'status' => 'error',
+            'type' => 'crud'
+        ], 400);
     }
 
     /**
