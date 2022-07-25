@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProdutoRequest;
 use App\Http\Requests\UpdateProdutoRequest;
+use App\Mail\ProdutoMail;
 use App\Models\Produto;
+use Illuminate\Support\Facades\Mail;
 
 class ProdutosController extends Controller
 {
@@ -22,12 +24,24 @@ class ProdutosController extends Controller
     public function store(StoreProdutoRequest $request)
     {
         $dadosProduto = $request->validated();
+
         if(Produto::create($dadosProduto))
+        {
+            $mailData = [
+                'nome' => $dadosProduto['nome'],
+                'valor' => $dadosProduto['valor'],
+                'loja_id' => $dadosProduto['loja_id'],
+                'ativo' => $dadosProduto['ativo']
+            ];
+
+            Mail::to('seu_email@gmail.com')->send(new ProdutoMail($mailData));
+
             return response()->json([
-                'message' => 'Produto cadastrada com sucesso',
+                'message' => 'Produto cadastrado com sucesso',
                 'status' => 'success',
                 'type' => 'crud'
             ], 200);
+        }
 
         return response()->json([
             'message' => 'Erro ao cadastrar o produto, verifique sua conexão e tente novamente',
