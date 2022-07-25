@@ -34,7 +34,9 @@ class ProdutosController extends Controller
                 'ativo' => $dadosProduto['ativo']
             ];
 
-            Mail::to('seu_email@gmail.com')->send(new ProdutoMail($mailData));
+            try {
+                Mail::to('seu_email@provedor.com')->send(new ProdutoMail($mailData));
+            } catch (\Exception $e){}
 
             return response()->json([
                 'message' => 'Produto cadastrado com sucesso',

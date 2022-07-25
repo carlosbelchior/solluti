@@ -1,64 +1,196 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# API SOLLUTI - BELCHIOR
+Software Solluti - Por Carlos Belchior.
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Tecnologias
+As tecnologias abaixo descritas foram utilizadas para desenvolver esse projeto
+The following technologies are being used to make this project work.
 
-## About Laravel
+- *Laravel 9.x*
+- *MySQL (or MariaDB)*
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Módulos
+Os módulos do projeto são:
+- Lojas (CRUD)
+- Produtos (CRUD)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Configuração do projeto
+Este é basicamente um projeto laravel. Para executar se faz necessário seguir os requisitos do framework. É EXTREMAMENTE recomendado que use docker para executar esta aplicação. Você pode instalr o Docker seguindo as instruções do link a seguir para [obter o docker](https://docs.docker.com/engine/install/).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+As próximas sessões irão fornecer instruções de como configurar e executar a aplicação em um container Docker.
 
-## Learning Laravel
+### Iniciando
+Para configurar seu container docker execute o comando abaixo:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```bash
+docker-compose up --build -d
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Para acessar o container PHP do docker execute o comando abaixo:
+```bash
+docker-compose exec php /bin/bash
+```
 
-## Laravel Sponsors
+O container docker será executado com imagens nginx, mysql e PHP.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+#### Arquivos de configuração
+Faça uma cópia do arquivo `.env.example`para `.env` e informe as variaveis de configuração conforme informado na documentação do Laravel no link a [seguir](https://laravel.com/docs/9.x/configuration).
 
-### Premium Partners
+IMPORTANTE: As configurações de acesso padrões do banco de dados são:
+- host: mysql
+- database: default
+- user: root
+- password: admin
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+#### Instalando dependencias
+Dentro do seu container PHP execute os comandos abaixo para instalar todas as dependencias do projeto:
+```bash
+composer install 
+```
 
-## Contributing
+#### Gere a chave laravel
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan key:generate 
+```
 
-## Code of Conduct
+#### Executando as migrations
+Entre no seu serviço PHP e execute as migrations para configurar seu banco de dados:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan migrate
+```
 
-## Security Vulnerabilities
+#### Executando as seeds
+Caso deseje gerar dados ficticios para o banco de dados, execute:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan db:seed
+```
 
-## License
+#### Executando testes
+Na imagem PHP do seu container execute o comando abaixo para executar os testes do Laravel:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan test
+```
+
+#### Parar a aplicação
+Para parar de executar a aplicação e apagar seu container, execute o comando abaixo no terminal do seu sistema
+
+```bash
+docker-compose down -v
+```
+
+#### Configure as permissões de log
+No terminal do seu sistema, permita o acesso a pasta de logs do Laravel:
+
+```bash
+sudo chmod o+w ./storage/ -R
+```
+
+#### Configurando o envio de e-mails
+Para executar o corretamente a notificação por e-mail configure nos arquivos abaixo os dados informados:
+
+No .env
+```
+MAIL_MAILER=smtp
+MAIL_HOST=host_do_provedor_de_email
+MAIL_PORT=587
+MAIL_USERNAME=seu_email@provedor_de_email.com
+MAIL_PASSWORD=senha_do_email
+MAIL_ENCRYPTION=criptografia_do_provedor
+MAIL_FROM_ADDRESS="email_do_remetente"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+#### No App\Http\Controllers\ProdutosController
+#### Linha 38
+#### Substitua seu_email@provedor.com pelo e-mail do destinatário 
+```
+Mail::to('seu_email@provedor.com')->send(new ProdutoMail($mailData));
+```
+
+## End-points
+
+### Loja:
+
+Para buscar as lojas:
+```
+Method: GET
+URL: /api/lojas/index
+```
+
+Para criar uma nova loja:
+```
+Method: POST
+URL: /api/lojas/store
+Data body:
+- 'nome' => 'required|min:3|max:40',
+- 'email' => 'required|email|unique:App\Models\Loja,email'
+```
+
+Para atualizar uma loja:
+```
+Method: POST
+URL: /api/lojas/update/ID_DO_CLIENTE
+Data body:
+- 'nome' => 'required|min:3|max:40',
+- 'email' => 'required|email|unique:App\Models\Loja,email'
+```
+
+Para buscar uma loja especifica:
+```
+Method: GET
+URL: /api/lojas/show/ID_DO_CLIENTE
+```
+
+Para excluir uma loja:
+```
+Method: GET
+URL: /api/lojas/destroy/ID_DO_CLIENTE
+```
+
+
+
+
+### Produto:
+
+Para buscar os produtos:
+```
+Method: GET
+URL: /api/produtos/index
+```
+
+Para criar uma novo produto:
+```
+Method: POST
+URL: /api/produtos/store
+Data body:
+- 'nome' => 'required|min:3|max:40',
+- 'valor' => 'required|numeric|min:0.01|max:9999.99',
+- 'loja_id' => 'required|exists:lojas,id',
+- 'ativo' => 'required|boolean'
+```
+
+Para atualizar um produto:
+```
+Method: POST
+URL: /api/produtos/update/ID_DO_CLIENTE
+Data body:
+- 'nome' => 'required|min:3|max:40',
+- 'valor' => 'required|numeric|min:0.01|max:9999.99',
+- 'loja_id' => 'required|exists:lojas,id',
+- 'ativo' => 'required|boolean'
+```
+
+Para buscar um produto especifico:
+```
+Method: GET
+URL: /api/produtos/show/ID_DO_PRODUTO
+```
+
+Para excluir um produto:
+```
+Method: GET
+URL: /api/produtos/destroy/ID_DO_PRODUTO
+```
